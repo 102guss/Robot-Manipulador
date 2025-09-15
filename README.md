@@ -1,0 +1,1 @@
+Plataforma virtual web que replica el movimiento cinemaico de un robot físico en uno virtual utilizando tecnologías de realidad virtual y grameworks modernos tanto para el backen como para el fronent tales como Laravel y vue.js.
