@@ -356,9 +356,18 @@ const goToCustomPosition = () => {
                         <div class="image-buttons-row">
                             <div class="image-button-container" @click="goToPositionC" title="Ángulos: 0°, 45°, -90°">
                                 <img src="models/movimiento1.png" alt="Punto C" class="position-image" />
+                                <p>Secuencia de movimientos A</p>
                             </div>
                             <div class="image-button-container" @click="goToCustomPosition" title="Ángulos: -54°, -14°, -33°">
                                 <img src="models/movimiento2.png" alt="Secuencia Personalizada" class="position-image" />
+                                <p>Secuencia de movimientos B
+
+
+
+
+
+
+                                </p>
                             </div>
                         </div>
 
@@ -398,7 +407,7 @@ const goToCustomPosition = () => {
    
 }
 .boton2:hover{
-    background-color: rgb(235, 71, 30);
+    background-color: rgb(249, 238, 97);
    
 }
 .textarea-grande {
@@ -442,5 +451,81 @@ pre{
     font-size: 12px;
     font-weight: bold;
     color: #333;
+}
+
+/* Telefonos movil (320px - 768px) */
+@media (max-width: 768px) {
+    #overlayPanel {
+        width: 100%;
+        transform: translateX(100%);
+    }
+    .image-buttons-row {
+        flex-direction: column;
+    }
+    .image-button-container {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .position-image {
+        width: 80px;
+        height: 60px;
+    }
+    .boton, .boton2 {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .textarea-grande {
+        width: 95%;
+        height: 150px;
+    }
+    pre {
+        font-size: 16px;
+    }
+}
+
+/* Tablet (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    #overlayPanel {
+        width: 40%;
+    }
+    .textarea-grande {
+        width: 90%;
+        height: 200px;
+    }
+    .position-image {
+        width: 100px;
+        height: 70px;
+    }
+    .boton, .boton2 {
+        font-size: 16px;
+    }
+}
+
+/* Escritorio (1025px - 1440px) */
+@media (min-width: 1025px) and (max-width: 1440px) {
+    #overlayPanel {
+        width: 30%;
+    }
+    .position-image {
+        width: 120px;
+        height: 80px;
+    }
+}
+
+/* Pantallas grandes de escritorio (1441px+) */
+@media (min-width: 1441px) {
+    #overlayPanel {
+        width: 25%;
+    }
+    .position-image {
+        width: 140px;
+        height: 90px;
+    }
+    .boton, .boton2 {
+        font-size: 18px;
+    }
+    pre {
+        font-size: 22px;
+    }
 }
 </style>
