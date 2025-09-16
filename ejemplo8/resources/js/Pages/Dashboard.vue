@@ -255,9 +255,9 @@ const sendCommand =  (event) => {
 
 // Función para mover el robot a la posición del Punto C
 const goToPositionC = () => {
-    q1Angle.value = 0;
+    q1Angle.value = 180;
     q2Angle.value = 45;
-    q3Angle.value = -90;
+    q3Angle.value = -80;
     
     updateCommand(); 
     
