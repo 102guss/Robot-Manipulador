@@ -353,7 +353,10 @@ const goToCustomPosition = () => {
                         <br><br>
                         <button class="boton2" @click="sendCommand6"><pre>    garra cierra  </pre></button>
                         <br><br>
-                        <button class="boton" @click="goToPositionC"><pre>    Ir a Alcance Frontal (Punto C)    </pre></button>
+                        <div class="image-button-container" @click="goToPositionC" title="Ángulos: 0°, 45°, -90°">
+                            <img src="models/movimiento1.png" alt="Punto C" class="position-image" />
+                           <!--  <span class="image-label">Ir a Alcance Frontal (Punto C)</span> -->
+                        </div>
                         <br><br>
                         <button class="boton2" @click="goToCustomPosition"><pre>    Secuencia Personalizada    </pre></button>
 
@@ -403,5 +406,34 @@ const goToCustomPosition = () => {
 pre{
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 20px;
+}
+.image-button-container {
+    cursor: pointer;
+    text-align: center;
+    padding: 10px;
+    border: 2px solid #3b85f5;
+    border-radius: 10px;
+    background-color: #f0f8ff;
+    transition: all 0.3s ease;
+    width: 40%;
+    margin: 0;
+}
+.image-button-container:hover {
+    background-color: #e6f3ff;
+    border-color: #2563eb;
+    transform: scale(1.05);
+}
+.position-image {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+.image-label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
 }
 </style>
