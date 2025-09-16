@@ -353,12 +353,14 @@ const goToCustomPosition = () => {
                         <br><br>
                         <button class="boton2" @click="sendCommand6"><pre>    garra cierra  </pre></button>
                         <br><br>
-                        <div class="image-button-container" @click="goToPositionC" title="Ángulos: 0°, 45°, -90°">
-                            <img src="models/movimiento1.png" alt="Punto C" class="position-image" />
-                           <!--  <span class="image-label">Ir a Alcance Frontal (Punto C)</span> -->
+                        <div class="image-buttons-row">
+                            <div class="image-button-container" @click="goToPositionC" title="Ángulos: 0°, 45°, -90°">
+                                <img src="models/movimiento1.png" alt="Punto C" class="position-image" />
+                            </div>
+                            <div class="image-button-container" @click="goToCustomPosition" title="Ángulos: -54°, -14°, -33°">
+                                <img src="models/movimiento2.png" alt="Secuencia Personalizada" class="position-image" />
+                            </div>
                         </div>
-                        <br><br>
-                        <button class="boton2" @click="goToCustomPosition"><pre>    Secuencia Personalizada    </pre></button>
 
                         
                         <pre>{{ responseText }}</pre>
@@ -407,15 +409,20 @@ pre{
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 20px;
 }
+.image-buttons-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
 .image-button-container {
     cursor: pointer;
     text-align: center;
-    padding: 10px;
+    padding: 5px;
     border: 2px solid #3b85f5;
     border-radius: 10px;
     background-color: #f0f8ff;
     transition: all 0.3s ease;
-    width: 40%;
+    width: 50%;
     margin: 0;
 }
 .image-button-container:hover {
@@ -424,10 +431,10 @@ pre{
     transform: scale(1.05);
 }
 .position-image {
-    width: 80px;
-    height: 60px;
+    width: 120px;
+    height: 80px;
     object-fit: cover;
-    border-radius: 5px;
+    border-radius: 5px; 
     margin-bottom: 5px;
 }
 .image-label {
