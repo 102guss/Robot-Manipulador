@@ -188,14 +188,17 @@ const sendCommand3 = (event)=>{
 }
 
 const sendCommand4 = async ()=>{
+    // Actualizar robot virtual a posición home
+    q1Angle.value = 0;
+    q2Angle.value = 0;
+    q3Angle.value = 0;
+    
     command.value= JSON.stringify({
-
         T:100
-        
     })
     const url = `http://${ip}/js?json=${encodeURIComponent(command.value)}`;
     const response =  axios.get(url);
-    responseText.value = response.data; // Muestra la respuesta del robot
+    responseText.value = response.data;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Botón para enviar comando de abrir pinza
@@ -250,6 +253,30 @@ const sendCommand =  (event) => {
   }
 };
 
+// Función para mover el robot a la posición del Punto C
+const goToPositionC = () => {
+    q1Angle.value = 0;
+    q2Angle.value = 45;
+    q3Angle.value = -90;
+    
+    updateCommand(); 
+    
+    const fakeEvent = { preventDefault: () => {} }; 
+    sendCommand(fakeEvent);
+};
+
+// Función para mover el robot a la nueva secuencia
+const goToCustomPosition = () => {
+    q1Angle.value = -54;
+    q2Angle.value = -14;
+    q3Angle.value = -33;
+    
+    updateCommand(); 
+    
+    const fakeEvent = { preventDefault: () => {} }; 
+    sendCommand(fakeEvent);
+};
+
 </script>
 <template>
     <AppLayout title="ROBOT">
@@ -275,7 +302,7 @@ const sendCommand =  (event) => {
                 class="text-xl absolute top-4 right-4 text-gray-500 hover:text-gray-700">×
                 
             </button>
-            <form class="bg-white rounded px-8 pt-6 pb-8 mb-4">
+            <div class="bg-white rounded px-8 pt-6 pb-8 mb-4">
                 <h2 class="text-2xl font-bold mb-6 text-center">Proyecto Brazo de Dragon</h2>
                     <div class="mb-4">
                         <div class="control-panel">
@@ -325,13 +352,17 @@ const sendCommand =  (event) => {
                         <button class="boton2" @click="sendCommand5"><pre>    garra abre   </pre></button>
                         <br><br>
                         <button class="boton2" @click="sendCommand6"><pre>    garra cierra  </pre></button>
+                        <br><br>
+                        <button class="boton" @click="goToPositionC"><pre>    Ir a Alcance Frontal (Punto C)    </pre></button>
+                        <br><br>
+                        <button class="boton2" @click="goToCustomPosition"><pre>    Secuencia Personalizada    </pre></button>
 
                         
                         <pre>{{ responseText }}</pre>
                     </div>
 
                     
-            </form>
+            </div>
         </div>   
         
       
