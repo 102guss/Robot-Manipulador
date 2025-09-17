@@ -147,6 +147,11 @@ import axios from "axios";
 const ip = "192.168.4.1"; // IP del robot
 const responseText = ref("");
 const command = ref(""); // Entrada para el usuario
+
+// Variables para automatización
+const isAutomating = ref(false);
+const currentCycle = ref(0);
+const maxCycles = ref(5);
 const updateCommand = () => {
   command.value = JSON.stringify({
     T: 122,
@@ -277,6 +282,62 @@ const goToCustomPosition = () => {
     sendCommand(fakeEvent);
 };
 
+// Función para ir a posición home
+const goToHome = () => {
+    q1Angle.value = 0;
+    q2Angle.value = 0;
+    q3Angle.value = 0;
+    
+    updateCommand();
+    
+    const fakeEvent = { preventDefault: () => {} };
+    sendCommand(fakeEvent);
+};
+
+// Función de automatización
+const startAutomation = () => {
+    if (isAutomating.value) return;
+    
+    isAutomating.value = true;
+    currentCycle.value = 0;
+    responseText.value = "Iniciando automatización...";
+    
+    const runCycle = () => {
+        if (currentCycle.value >= maxCycles.value) {
+            isAutomating.value = false;
+            responseText.value = `Automatización completada. ${maxCycles.value} ciclos realizados.`;
+            return;
+        }
+        
+        currentCycle.value++;
+        responseText.value = `Ciclo ${currentCycle.value}/${maxCycles.value} - Moviendo a posición personalizada...`;
+        
+        // Ir a posición personalizada
+        goToCustomPosition();
+        
+        // Después de 5 segundos, ir a home
+        setTimeout(() => {
+            if (!isAutomating.value) return;
+            responseText.value = `Ciclo ${currentCycle.value}/${maxCycles.value} - Regresando a home...`;
+            goToHome();
+            
+            // Después de 5 segundos más, siguiente ciclo
+            setTimeout(() => {
+                if (!isAutomating.value) return;
+                runCycle();
+            }, 5000);
+        }, 5000);
+    };
+    
+    runCycle();
+};
+
+// Función para detener automatización
+const stopAutomation = () => {
+    isAutomating.value = false;
+    responseText.value = "Automatización detenida.";
+};
+
 </script>
 <template>
     <AppLayout title="ROBOT">
@@ -353,6 +414,38 @@ const goToCustomPosition = () => {
                         <br><br>
                         <button class="boton2" @click="sendCommand6"><pre>    garra cierra  </pre></button>
                         <br><br>
+                        
+                        <!-- Controles de Automatización -->
+                        <div class="automation-controls">
+                            <h3>Automatización</h3>
+                            <div class="mb-2">
+                                <label>Ciclos a repetir:</label>
+                                <input type="number" v-model="maxCycles" min="1" max="50" :disabled="isAutomating" class="w-16 ml-2 px-2 py-1 border rounded" />
+                            </div>
+                            <button 
+                                class="boton" 
+                                @click="startAutomation" 
+                                :disabled="isAutomating"
+                                :class="{ 'opacity-50': isAutomating }"
+                            >
+                                <pre>{{ isAutomating ? '  Ejecutando...  ' : '  Iniciar Auto  ' }}</pre>
+                            </button>
+                            <br><br>
+                            <button 
+                                class="boton2" 
+                                @click="stopAutomation" 
+                                :disabled="!isAutomating"
+                                :class="{ 'opacity-50': !isAutomating }"
+                            >
+                                <pre>  Detener Auto  </pre>
+                            </button>
+                            <br><br>
+                            <div v-if="isAutomating" class="text-sm text-blue-600">
+                                Ciclo actual: {{ currentCycle }}/{{ maxCycles }}
+                            </div>
+                        </div>
+                        <br><br>
+                        
                         <div class="image-buttons-row">
                             <div class="image-button-container" @click="goToPositionC" title="Ángulos: 0°, 45°, -90°">
                                 <img src="models/movimiento1.png" alt="Punto C" class="position-image" />
