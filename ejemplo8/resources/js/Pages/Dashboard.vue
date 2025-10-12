@@ -55,11 +55,18 @@ const q3Angle = ref(0);
 
 // Cargar el modelo GLB
 let robot;
+let mesa; // Referencia a la mesa
 const loader = new GLTFLoader();
 loader.load('models/glb/brazo_v25_G.glb', function (gltf) {
     robot = gltf.scene;
     scene.add(robot);
-    //robot.rotation.x=Math.PI/2;
+    
+    // Obtener referencia a la mesa
+    mesa = robot.getObjectByName('Object_4');
+    if (mesa) {
+        console.log('Mesa encontrada para detección de colisiones');
+    }
+    
     texture.flipY = false;
 
 }, undefined, function (error) {
@@ -88,6 +95,35 @@ function applyDHTransform(eslabon, dhMatrix,origen) {
     eslabon.setRotationFromMatrix(dhMatrix);
     eslabon.position.set(x,y,z);
 }
+
+// Función para detectar colisiones con la mesa
+function detectarColisionConMesa() {
+    if (!robot || !mesa) return false;
+    
+    const eslabones = [
+        robot.getObjectByName('Eslabon0'),
+        robot.getObjectByName('Eslabon1'),
+        robot.getObjectByName('Eslabon2')
+    ];
+    
+    // Crear bounding box de la mesa
+    const mesaBox = new THREE.Box3().setFromObject(mesa);
+    
+    // Verificar colisión con cada eslabón
+    for (let eslabon of eslabones) {
+        if (eslabon) {
+            const eslabonBox = new THREE.Box3().setFromObject(eslabon);
+            if (mesaBox.intersectsBox(eslabonBox)) {
+                console.warn('¡COLISIÓN DETECTADA con la mesa!');
+                return true;
+            }
+        }
+    }
+    return false;
+}
+// Variables para almacenar ángulos anteriores
+let previousAngles = { q1: 0, q2: 0, q3: 0 };
+
 // Función para actualizar el brazo robótico según los ángulos de los sliders
 function updateRobot() {
     if (!robot) return;  // Verificar si el modelo ha sido cargado
@@ -109,6 +145,10 @@ function updateRobot() {
     const H_0_4 = new THREE.Matrix4().multiplyMatrices(H_0_3, H_3_4);
     const H_0_5 = new THREE.Matrix4().multiplyMatrices(H_0_4, H_4_5);
 
+        const position = new THREE.Vector3();
+    position.setFromMatrixPosition(H_0_4);
+
+ 
     // Aplicar las transformaciones a los eslabones del robot
     const base = robot.getObjectByName('Base');
     const eslabon0 = robot.getObjectByName('Eslabon0');
@@ -122,6 +162,25 @@ function updateRobot() {
 
     // Asegurarse de que se aplique la transformación
     robot.updateMatrixWorld(true);
+    
+    // Detectar colisiones después de aplicar transformaciones
+    if (detectarColisionConMesa()) {
+        // Revertir a posición anterior si hay colisión
+        q1Angle.value = previousAngles.q1;
+        q2Angle.value = previousAngles.q2;
+        q3Angle.value = previousAngles.q3;
+        
+        // Mostrar alerta al usuario
+        alert('¡Movimiento bloqueado! El robot chocaría con la mesa.');
+        return;
+    }
+    
+    // Guardar ángulos actuales como anteriores
+    previousAngles = {
+        q1: q1Angle.value,
+        q2: q2Angle.value,
+        q3: q3Angle.value
+    };
 }
 // Función de animación
 function animate() {
